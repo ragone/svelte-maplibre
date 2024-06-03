@@ -178,6 +178,10 @@
       dispatch('load', $mapInstance!);
     });
 
+    $mapInstance.once('idle', (e) => {
+      dispatch('ready', $mapInstance);
+    });
+
     $mapInstance.on('error', (e) => dispatch('error', { ...e, map: $mapInstance }));
 
     $mapInstance.on('movestart', (ev) => dispatch('movestart', { ...ev, map: $mapInstance }));
