@@ -13,6 +13,7 @@
   export let minzoom: number | undefined = undefined;
   export let maxzoom: number | undefined = undefined;
   export let visible = true;
+  export let beforeId: string | undefined = undefined;
   /** Whether to handle mouse events on this layer.
    * @deprecated Use `interactive` instead. */
   export let pickable: boolean | undefined = undefined;
@@ -102,7 +103,7 @@
     };
   }
 
-  let layer: typeof import('@deck.gl/mapbox').MapboxLayer;
+  export let layer: typeof import('@deck.gl/mapbox').MapboxLayer;
   $: if ($map && deckgl && !layer) {
     $map.on('zoom', handleZoom);
     $map.on('zoomend', handleZoom);
@@ -113,7 +114,10 @@
       type,
       ...options,
     });
-    $map.addLayer(layer);
+    $map.addLayer(layer, beforeId);
+    if (layer.deck) {
+      layer.deck.props.getCursor = () => '';
+    }
   }
 
   $: layer?.setProps(options);
